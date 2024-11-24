@@ -11,6 +11,10 @@ const getForecastDay = (currentDate) => {
     return daysOfWeek[dayIndex];
 }
 
+const getDayConditionIcon = (code) => {
+
+}
+
 const createModule = async function (APIKey) {
     try {
         const response = await fetch(
@@ -48,7 +52,7 @@ const createModule = async function (APIKey) {
             const newLi = document.createElement('li')
             newLi.innerHTML = `
                 <li>
-                  <span class="day">${dayName}</span> <img src="assets/icons/snow.svg"/>
+                  <span class="day">${dayName}</span> <img src="assets/icons/fog.svg"/>
                   <span class="temperature"><span class="temperature__value">${avgTemp}</span>&deg;C</span>
                 </li>
             `
