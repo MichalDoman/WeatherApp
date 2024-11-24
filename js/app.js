@@ -11,8 +11,16 @@ const getForecastDay = (currentDate) => {
     return daysOfWeek[dayIndex];
 }
 
-const getDayConditionIcon = (code) => {
+const getDayConditionIcon = async (code) => {
+    try {
+        const response = await fetch("../weather_conditions.json")
+        const weatherConditions = await response.json();
+        const conditionItem = weatherConditions.find((item) => item.code === code);
 
+        return conditionItem.icon;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const createModule = async function (APIKey) {
@@ -45,14 +53,14 @@ const createModule = async function (APIKey) {
         const forecastDays = data.forecast.forecastday
         for ( let i = 0; i < forecastDays.length; i++) {
             const day = forecastDays[i];
-            console.log(day.day.condition.text)
             const dayName = getForecastDay(day.date);
             const avgTemp = day.day.avgtemp_c;
+            const icon =  await getDayConditionIcon(day.day.condition.code)
 
             const newLi = document.createElement('li')
             newLi.innerHTML = `
                 <li>
-                  <span class="day">${dayName}</span> <img src="assets/icons/fog.svg"/>
+                  <span class="day">${dayName}</span> <img src="assets/icons/${icon}"/>
                   <span class="temperature"><span class="temperature__value">${avgTemp}</span>&deg;C</span>
                 </li>
             `
@@ -66,7 +74,6 @@ const createModule = async function (APIKey) {
     } catch (error) {
         console.log(error);
     }
-
 }
 
 createModule(config.WeatherAPIKey);
