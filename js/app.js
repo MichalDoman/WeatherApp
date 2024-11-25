@@ -23,10 +23,10 @@ const getDayConditionIcon = async (code) => {
     }
 }
 
-const createModule = async function (APIKey) {
+const createModule = async function (APIKey, city="auto:ip") {
     try {
         const response = await fetch(
-            `http://api.weatherapi.com/v1/forecast.json?key=${APIKey}&q=auto:ip&days=5
+            `http://api.weatherapi.com/v1/forecast.json?key=${APIKey}&q=${city}&days=5
         `);
         const data = await response.json();
         console.log(data);
@@ -67,6 +67,13 @@ const createModule = async function (APIKey) {
 
             forecastList.append(newLi);
         }
+
+        // Add events for buttons:
+        const closeBtn = module.querySelector('.btn--close');
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.target.closest('.module__weather').remove();
+        })
 
         // Update HTML:
         container.append(module);
