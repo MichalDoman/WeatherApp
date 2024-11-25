@@ -1,10 +1,12 @@
 import config from '/.config.js';
 
 const container = document.querySelector('section.container');
+const addCityBtn = document.querySelector('#add-city')
+const formTemplate = document.querySelector('.module__form')
 const moduleTemplate = document.querySelector('.module__weather')
 
 const getForecastDay = (currentDate) => {
-    const daysOfWeek = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const date = new Date(currentDate);
     const dayIndex = date.getDay();
 
@@ -83,4 +85,44 @@ const createModule = async function (APIKey, city="auto:ip") {
     }
 }
 
-createModule(config.WeatherAPIKey);
+const getFormModule = () => {
+    const formModule = formTemplate.cloneNode(true);
+    formModule.removeAttribute('hidden');
+    addCityBtn.disabled = true;
+
+    // Close button functionality:
+    const closeBtn = formModule.querySelector('.btn--close');
+    closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.target.closest('.module__form').remove();
+        addCityBtn.disabled = false;
+    });
+
+    // Submit button functionality
+    const submitBtn = formModule.querySelector('form button');
+    const input = formModule.querySelector('input');
+
+    submitBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await createModule(config.WeatherAPIKey, input.value);
+            closeBtn.click()
+        } catch (error) {
+            alert("Wrong city name!")
+        }
+
+    })
+
+    container.prepend(formModule);
+}
+
+const main = async () => {
+    addCityBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        getFormModule();
+    })
+
+    await createModule(config.WeatherAPIKey);
+}
+
+await main();
