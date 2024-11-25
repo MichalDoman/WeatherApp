@@ -61,10 +61,8 @@ const createModule = async function (APIKey, city="auto:ip") {
 
             const newLi = document.createElement('li')
             newLi.innerHTML = `
-                <li>
                   <span class="day">${dayName}</span> <img src="assets/icons/${icon}"/>
-                  <span class="temperature"><span class="temperature__value">${avgTemp}</span>&deg;C</span>
-                </li>
+                  <span class="temperature"><span class="temperature__value">${avgTemp}</span>&deg;C</span>        
             `
 
             forecastList.append(newLi);
