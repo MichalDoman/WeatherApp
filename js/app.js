@@ -53,20 +53,23 @@ const createModule = async function (APIKey, city="auto:ip") {
 
         // Forecast:
         const forecastDays = data.forecast.forecastday
-        for ( let i = 0; i < forecastDays.length; i++) {
-            const day = forecastDays[i];
+        const elements = await Promise.all(forecastDays.map(async (day) => {
             const dayName = getForecastDay(day.date);
             const avgTemp = day.day.avgtemp_c;
-            const icon =  await getDayConditionIcon(day.day.condition.code)
+            const icon = await getDayConditionIcon(day.day.condition.code);
 
-            const newLi = document.createElement('li')
-            newLi.innerHTML = `
-                  <span class="day">${dayName}</span> <img src="assets/icons/${icon}"/>
-                  <span class="temperature"><span class="temperature__value">${avgTemp}</span>&deg;C</span>        
-            `
+            return `
 
-            forecastList.append(newLi);
-        }
+                <li>
+                    <span class="day">${dayName}</span> 
+                    <img src="assets/icons/${icon}" alt="Weather icon"/>
+                    <span class="temperature">
+                        <span class="temperature__value">${avgTemp}</span>&deg;C
+                    </span>        
+                </li>`;
+        }))
+
+        forecastList.innerHTML = elements.join('');
 
         // Add events for buttons:
         const closeBtn = module.querySelector('.btn--close');
