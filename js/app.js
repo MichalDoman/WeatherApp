@@ -59,7 +59,6 @@ const createModule = async function (APIKey, city="auto:ip") {
             const icon = await getDayConditionIcon(day.day.condition.code);
 
             return `
-
                 <li>
                     <span class="day">${dayName}</span> 
                     <img src="assets/icons/${icon}" alt="Weather icon"/>
